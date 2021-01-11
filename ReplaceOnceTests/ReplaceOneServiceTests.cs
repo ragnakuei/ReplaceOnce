@@ -3,7 +3,7 @@ using ReplaceOnce;
 
 namespace ReplaceOnceTests
 {
-    public class Tests
+    public class ReplaceOneServiceTests
     {
         [SetUp]
         public void Setup()
