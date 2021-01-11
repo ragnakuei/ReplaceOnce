@@ -8,28 +8,24 @@ namespace ReplaceOnce
     {
         public string ReplaceOnce(string fullSource, string fullFilter)
         {
-            return string.Join(" ", Extract(fullSource.Split(" "), fullFilter.Split(" ")));
+            return string.Join(" ",
+                               Extract(new Queue<string>(fullSource.Split(" ")),
+                                       new Queue<string>(fullFilter.Split(" "))));
         }
 
-        private IEnumerable<string> Extract(IEnumerable<string> source, IEnumerable<string> filters)
+        private IEnumerable<string> Extract(Queue<string> source, Queue<string> filters)
         {
-            using(var sourceIter = source.GetEnumerator())
+            while (source.Count > 0)
             {
-                using(var filterIter = filters.GetEnumerator())
+                if (filters.Count > 0
+                 && source.Peek().Equals(filters.Peek()))
                 {
-                    filterIter.MoveNext();
-
-                    while (sourceIter.MoveNext())
-                    {
-                        if (sourceIter.Current?.Equals(filterIter.Current) ?? false)
-                        {
-                            filterIter.MoveNext();
-                            continue;
-                        }
-
-                        yield return sourceIter.Current;
-                    }
+                    filters.Dequeue();
+                    source.Dequeue();
+                    continue;
                 }
+
+                yield return source.Dequeue();
             }
         }
     }
